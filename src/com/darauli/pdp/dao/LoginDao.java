@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -38,6 +39,28 @@ public class LoginDao {
 			session.close();
 		}
 		return reg;
+	}
+
+
+	public int registerUser(Registration user) {
+		Session session =null;
+		Transaction tx = null;
+		boolean flag =false;
+		int i =0;
+		try {
+			
+			session = factory.openSession();
+			tx = session.beginTransaction();
+			 i =	(Integer)session.save(user);
+			tx.commit();
+				
+		}catch (Exception ex) {
+			tx.rollback();
+			ex.printStackTrace();
+		}finally {
+			session.close();
+		}
+		return i;
 	}
 	
 	

@@ -90,7 +90,7 @@
         <button class="btn  btn-primary btn-block" type="submit" style="height:50px;margin-top:24px">Sign in</button>
       </form>
       <a href="<%=path %>/trouble">Forget Something </a>
-      <a  style="margin-left: 167px;" href="<%=path %>/signUp">New User</a>
+      <a  style="margin-left: 167px;" href="<%=path %>/registration">New User</a>
       </div>
 </body>
 </html>
