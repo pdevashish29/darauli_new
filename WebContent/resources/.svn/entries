@@ -1,0 +1,40 @@
+10
+
+dir
+52642
+svn://192.168.1.75/serviceNetworks/WebContent/resources
+svn://192.168.1.75
+
+
+
+2016-08-24T08:26:57.328125Z
+52426
+navneet.m
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+1e34cb23-f46a-4246-8114-ac864b3302c3
+
+css
+dir
+
+fonts
+dir
+
+image
+dir
+
+js
+dir
+
