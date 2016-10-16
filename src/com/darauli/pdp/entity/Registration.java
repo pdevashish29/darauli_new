@@ -28,9 +28,9 @@ public class Registration {
 	private String country;
 	private int zipcode;
 	
-	private Date registartionDate;
-	private char invalid_flag;
-	private char delete_flag;
+	private Date registartionDate= new Date();
+	private char invalid_flag='Y';
+	private char delete_flag='N';
 	public int getId() {
 		return id;
 	}
