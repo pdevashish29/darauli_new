@@ -50,21 +50,31 @@
 <jsp:include page="/WEB-INF/views/component/header.jsp"></jsp:include>
 <br><br></br></br>
  <div class="container">
-   
-   
-   <div>
-   ${userInfo.firstName}<br>
-<a href="<%=path %>/logout">LogOut</a>
+ 
+ <div>
+<form action="<%=path %>/varifyMe" method="post" class="form-horizontal">
 
-<div>
-${USERINFO.firstName}<br>
+<div class="form-group">
+    <label class="control-label col-xs-4" for="firstName">OTP is sended to the $nbsp; {userInfo.phone}:</label>
+    <div class="col-xs-4">
+      <input type="text" class="form-control" id="firstName" name ="otp" >
+    </div>
+  </div>
+  
 
-		<% 
-		HttpSession session= request.getSession();
-		Registration registration= (Registration)session.getAttribute("userInfo");			
-		%>
-		<h2> <%=registration.getFirstName() %></h2>
-</div>
+<div class="form-group">
+    <label class="control-label col-xs-4" for="firstName">OTP:</label>
+    <div class="col-xs-4">
+      <input type="text" class="form-control" id="firstName" name ="otp" >
+    </div>
+  </div>
+  
+ <div class="form-group"> 
+    <label class="control-label col-xs-4" for="pwd">&nbsp;</label>
+    <div class=" col-xs-4">
+      <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+  </div>
 
 </div>
    

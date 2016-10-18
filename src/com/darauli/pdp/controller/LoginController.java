@@ -10,34 +10,43 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.darauli.pdp.dao.LoginDao;
 import com.darauli.pdp.entity.Registration;
 
 @Controller
+@SessionAttributes("userInfo")
 public class LoginController {
 	@Autowired
 	private LoginDao loginDao;
 	
+	private Registration userInfo;
+	
 	@RequestMapping("/handleLogin")
-	private String throghDLoginPage(){
+	private String throghDLoginPage(HttpSession session, Model model){
+		userInfo=(Registration)session.getAttribute("userInfo");
+		if(userInfo!=null){
+			return "dashboard";
+		}
+		model.addAttribute("userInfo", new Registration());	
 		return "login";
 	}
 	
 	@RequestMapping(value="/handleLogin", method=RequestMethod.POST)
 	public String handleLogin(Model model,@RequestParam(value="username") String username,	@RequestParam(value="password") String password,HttpSession session){
 		String message = "";
-		Registration getUserInfo=null;
+		userInfo=null;
 		if((username != null && !("").equals(username)) && (password != null && !("").equals(password))){
-			getUserInfo =loginDao.login(username, password);
-		if(getUserInfo!=null){
-			if("".equals(getUserInfo.getPassword().trim())){
+			userInfo =loginDao.login(username, password);
+		if(userInfo!=null){
+			if("".equals(userInfo.getPassword().trim())){
 				message= "Invalid credentials.";
 				model.addAttribute("message",message);
 				return "login";			
 			} else  {
-				model.addAttribute("USERINFO", getUserInfo);
+				model.addAttribute("userInfo", userInfo);
 				return "dashboard";
 			}
 		}
@@ -60,28 +69,5 @@ public class LoginController {
 		
 	}
 	
-	@RequestMapping("/registration")
-	public String getSignUpPage(Model model){
-		model.addAttribute("registrion", new Registration());
-		return "registration";
-	}
-	
-	@RequestMapping(value="/registration", method=RequestMethod.POST)
-	public String ProcessSignUp(@ModelAttribute("registration") Registration user, Model model , BindingResult result){
-		if(result.hasErrors()){
-			return "redirect:/registration";
-		}
-		int i =	loginDao.registerUser(user);
-		if(i>0){
-			model.addAttribute("userd", i);
-			return "redirect:/";	
-		}else{
-			return "redirect:/registration";
-			}
+}	
 		
-	}}	
-		
-		
-	
-
-
