@@ -1,0 +1,313 @@
+<style>
+
+/* CSS used here will be applied after bootstrap.css */
+.dropdown {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+.glyphicon-bell {
+    font-size: 1.5rem;
+}
+
+.notifications {
+    min-width: 420px;
+}
+
+.notifications-wrapper {
+    overflow: auto;
+    max-height: 250px;
+}
+
+.menu-title {
+    color: #ff7788;
+    font-size: 1.5rem;
+    display: inline-block;
+}
+
+.glyphicon-circle-arrow-right {
+    margin-left: 10px;
+}
+
+.notification-heading,.notification-footer {
+    padding: 2px 10px;
+}
+
+.dropdown-menu.divider {
+    margin: 5px 0;
+}
+
+.item-title {
+    font-size: 1.3rem;
+    color: #000;
+}
+
+.notifications a.content {
+    text-decoration: none;
+    background: #ccc;
+}
+
+.notification-item {
+    padding: 10px;
+    margin: 5px;
+    background: #ccc;
+    border-radius: 4px;
+}
+
+#main-content {
+    height: 100vh;
+    overflow: hidden;
+}
+ .jumbotron{
+  position: relative;
+}
+
+#video-background { 
+  position: fixed;
+  overflow: hidden;
+  width:100%;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #17AEFF;
+}
+</style>
+
+ <!-- header and  its menu -->
+
+<nav class="navbar navbar-fixed-top" style="color: white; min-height: 60px;">
+    <div class="container-fluid">
+         <div class="navbar-header">
+	         <a class="navbar-brand" href="javascript:void(0);">
+	            <img alt="Cinque Terre" src="{{logoImageUrl}}" width="40" height="40">
+	        </a>
+        </div>
+     <a  class="navbar-brand"  style="color: white; font-size: 20px; margin-top: 10px;">&nbsp;&nbsp;vFlip Online </a>
+        <!--   header right  side menu -->
+    <ul class="nav navbar-nav navbar-right">
+     <li>
+        <form class="navbar-form" role="search" style="margin-top: 18px;">
+            <input type="text" class="form-control form-table"
+                style="background-color: white;" placeholder="Search by alias"
+                data-typeahead="item.addUserLink for item in searchUsers($viewValue) | filter:$viewValue"
+                data-ng-model="item.aliasName"
+                data-typeahead-on-select='onSelectUser($item)'
+                data-typeahead-min-length="2" autocomplete="off">
+        </form>
+     </li>
+    <li>
+        <a class="dropdown-toggle" data-toggle="dropdown" id="dLabel" style="color: white; text-align: center;" href="javascript:void(0)">
+             <i class="fa fa-bell fa-1x" aria-hidden="true" style="color: {{styleColor"></i></i> 
+             <span class="badge">{{notificationCount}}</span>
+             <br> Notification
+        </a>
+        <ul ng-show="notifications.length > 0" class="dropdown-menu notifications" aria-labelledby="dLabel">
+         <div class="notifications-wrapper" ng-repeat="notification in notifications">
+            <a class="content" href="javascript:void(0)">
+                <div class="notification-item">
+                    <h5>
+                        <img alt="Cinque Terre" class="img-rounded" src="{{defaultUserImage}}" width="40" height="40"> 
+                        <span class="item-title" style="margin-left: 10px">{{notification.aliasName}}</span>
+                    </h5>
+                    <button class="btn btn-primary item-title" ng-click="acceptFriendRequest(notification ,$index)">Accept</button>
+                    <button class="btn btn-default pull-right item-title" ng-click="rejectFriendRequest(notification)">Delete Request</button>
+                </div>
+            </a>
+         </div>
+        </ul>
+     </li>
+    <li>
+        <a style="color: white; text-align: center;" ng-click="closeOpenSideNav()" href="javascript:void(0);"> <i class="fa fa-users" aria-hidden="false"></i> <br> Conference &nbsp;<br></a>
+    </li>
+   <!--  <li>
+        <a style="margin-top: 7px; color: white; text-align: center;"ng-click="closeOpenSideNav()" href="javascript:void(0)">  <i class="fa fa-address-book" aria-hidden="true"></i><br>Contacts </a>
+    </li> -->
+    <li class="dropdown" style="    margin-left: -10px;">
+    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="margin-top: -14px;">
+        <img src="{{currentUser.imageUrl !=undefined ? currentUser.imageUrl: defaultUserImage}}" width="40" height="40" class="profile-image img-circle" > <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        <li ><a  href="javascript:void(0);"><i class="fa fa-cog"></i> Account</a></li>
+        <li class="divider"></li>
+        <li ng-click="logOutMe();" ><a href="javascript:void(0);"><i class="fa fa-sign-out"></i> Sign-out</a></li>
+    </ul>
+</li>
+    </ul>
+    </div>
+</nav>
+ <!-- header and  its menu -->
+
+<div class="wrapper " id="main-content">
+
+<!-- right side contact Menu -->
+    <div id="mySidenav" class="sidenav " style="height: 100% !important; background-color: #f5f5f5;border: 1px solid #e3e3e3;">
+         <table class ="table" style="margin-top: 10px;">
+                <tr>
+                     <td><input type ="text"  class ="form-control form-table" ng-model="meetingIdtext" placeholder="Meeting Id"></td>
+                     <td> <button class="btn btn-primary" ng-click="joinMeetingRequest()">Join</button></td>
+                 </tr>
+                  <tr>
+                    <td ng-show="isMeetingStarted==false"><button class="btn btn-primary" ng-click="startMeeting()">Start meeting</button></td>
+                    <td ng-show="isMeetingStarted==true"><button class="btn btn-danger" ng-click="stopMeeting()">Stop </button></td>
+                    <td>{{meetingID }}</td>
+                 </tr>
+         </table>  
+     
+     <ul class="nav nav-pills nav-stacked" style="margin-top: -10px;">
+        <form >
+            <input type="text" ng-model="searchText" class="form-control" placeholder="Search Contact" ng-keyup="filterThis()">
+        </form>
+    </ul>
+    <div class="list-group" style="max-height: 50%; overflow-y: auto;">
+      <div ng-repeat="(key, value) in contact">
+        <li class="list-group-item">
+         <table style="width: 100%">
+            <tr>
+                <td width="10%"><img src="{{value.imageUrl !=null ? value.imageUrl: defaultUserImage}}" class="img-circle" alt="Cinque Terre" width="30" height="30"></td>
+                <td class="aliasName" width="*" style="vertical-align: top; padding: 4px;" class="form-group">{{value.aliasName }}<br>
+                     <i ng-if="value.status=='online'" style="color: green; margin-left: 2px;" class="fa fa-circle" aria-hidden="true"></i>
+                     <i ng-if="value.status=='offline'" style="color: red; margin-left: 2px;" class="fa fa-circle" aria-hidden="true"></i>
+                     <i ng-if="value.status=='onCall'" style="color: orange; margin-left: 2px;" class="fa fa-circle" aria-hidden="true"></i> 
+                     <i style="margin-left: 4px; cursor: pointer;" class="fa fa-video-camera" ng-click="makeCall(key,value);" aria-hidden="true"></i>
+                </td>
+                <td width="5%"><i ng-click="deleteContact(key);" style="cursor: pointer;" class="fa fa-trash-o " aria-hidden="true"></i></td>
+            </tr>
+        </table>
+        </li>
+     </div>
+    </div>
+   </div>
+   <!-- end right side contact Menu -->
+   
+   
+   <!-- Main Content start  -->
+    <div class="container-fluid" style="padding: 0; padding-top: 70px;">
+               <div class="panel panel-default" style="height: 100%">
+                   <div class="panel-heading"><div class=" text-center text-header">Conference</div></div>
+                        <div class="pannel-content"  style="min-height: 100%">
+                         <div class="row" id ="box">
+			                <div class="col-lg-3 col-md-3 col-sm-3">
+			                    <div class="panel panel-default">
+			                        <div class="panel-heading"><div class=" text-center text-header">{{currentUser.aliasName}}</div></div>
+			                            <div class="pannel-content">
+			                                <video class="img-responsive" id="my-video0" autoplay="autoplay"></video> 
+			                            </div>
+			                            <div class="panel-footer">
+			                               <div class=" text-center">&nbsp;</div>
+			                             </div>
+			                      </div>
+			                 </div>
+			                 <!-- placeholder for remote streams  -->
+			                 
+                         </div>
+                        </div>
+                      </div>  
+                
+         
+         
+         
+
+<!-- modals  -->
+
+
+        <!-- modal for making  call  -->
+        <div class="modal " id="callingModal" role="dialog">
+            <div class="modal-dialog modal-sm"
+                style="top: 25%; margin-left: 35%;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p class="text-left text-primary" >Calling....</p>
+                      <center>
+                             <img src="{{friend.imageUrl==null? defaultUserImage :friend.imageUrl }}" class="img-rounded img-responsive" alt="Cinque Terre" width="100" height="80">
+                             <p class="text-center"><strong>{{friend.aliasName}}</strong><br>{{friendEmail}}</p>
+                             <img  class="text-center" src="resources/images/reject.png" style="height: 40px; cursor: pointer;"ng-click="cancelCall()" >
+                      </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end of modal for making call  -->
+
+
+        <!-- modal for accepting and rejecting  call  -->
+        <div class="modal " id="incomingCallModal" role="dialog">
+            <div class="modal-dialog modal-sm" style="top: 25%; margin-left: 35%;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    <p class="text-left text-primary" >Incoming Call....</p>
+                         <center>
+                            <img src="{{friend.imageUrl==null? defaultUserImage :friend.imageUrl }}" class="img-rounded img-responsive" alt="Cinque Terre" width="100" height="80">
+                             <p class="text-center"><strong>{{friend.aliasName}}</strong><br>{{friendEmail}}</p>
+	                        <div class="form-inline" style="text-align: center;">
+	                            <img src="resources/images/reject.png" style="height: 40px; cursor: pointer;" ng-click="rejectCall()">
+	                            <img src="resources/images/accept.png" style="height: 40px; margin-left: 50px; cursor: pointer;" ng-click="acceptCall()">
+	                        </div>
+                        </center>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end of  modal for receiving cal  -->
+        
+        <!--start  of  modal for general alert request success /failed  -->
+        <div class="modal fade" id="successFriendRequestModal" role="dialog"
+            style="width: 100%">
+            <div class="modal-dialog modal-sm"
+                style="top: 25%; margin-left: 35%;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <p class={{success.textColorClass}}>{{success.message}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end of  modal for general alert request success /failed  -->
+        
+        
+        
+        <!-- modal for making  meeting request  -->
+        <div class="modal " id="joinMeetingRequestModal" role="dialog">
+            <div class="modal-dialog modal-sm"
+                style="top: 25%; margin-left: 35%;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                          <p class="text-left text-primary" >Joining Meeting....</p>
+                          <center>
+                            <img src="{{meetingImageUrl}}" class="img-rounded img-responsive" alt="Cinque Terre" width="100" height="80">
+                             <p class="text-center"><strong>{{friend.aliasName}} {{meetingIdtext}}</strong><br>{{friendEmail}}</p>
+                             <img  class="text-center" src="resources/images/reject.png" style="height: 40px; cursor: pointer;"ng-click="cancelMeetingRequest()" >
+                         </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+        <!-- modal for rejecting and accepting  meeting   -->
+        <div class="modal " id="meetingAcceptRejectModal" role="dialog">
+            <div class="modal-dialog modal-sm"
+                style="top: 25%; margin-left: 35%;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                         <p class="text-left text-primary" >Incoming meeting request....</p>
+                         <center>
+                            <img src="{{friend.imageUrl==null? defaultUserImage :friend.imageUrl }}" class="img-rounded img-responsive" alt="Cinque Terre" width="100" height="80">
+                             <p class="text-center"><strong>{{participantsId}}</strong><br>{{participantsEmail}}</p>
+                            <div class="form-inline" style="text-align: center;">
+                                <img src="resources/images/reject.png" style="height: 40px; cursor: pointer;" ng-click="rejectMeeting()">
+                                <img src="resources/images/accept.png" style="height: 40px; margin-left: 50px; cursor: pointer;" ng-click="acceptMeeting()">
+                            </div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+     <!-- end of wrapper --> 
+    
